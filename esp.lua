@@ -2,9 +2,8 @@
 --  INIT (runs once)
 -- ============================================================
 if not _G.esp_loaded then
-    _G.esp_loaded = true
-
-    loadstring(dx9.Get("https://raw.githubusercontent.com/x8n8x/srp/refs/heads/main/seraph9.lua"))()
+    _G.esp_loaded  = true
+    _G.esp_library = library
 
     local DataModel = dx9.GetDatamodel()
     local Workspace = dx9.FindFirstChild(DataModel, "Workspace")
@@ -71,8 +70,7 @@ if not _G.esp_loaded then
     s_ammo_r:toggle({ name="Maverick Ammo 6", flag="ammo_mav_6",    default=false })
     s_ammo_r:toggle({ name="Ruger22 Ammo 10", flag="ammo_ruger_10", default=false })
 
-    _G.esp_window  = window
-    _G.esp_library = library
+    _G.esp_window = window
 end
 
 -- ============================================================
