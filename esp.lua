@@ -11,17 +11,17 @@ local Chunks    = dx9.FindFirstChild(Workspace, "Chunks")
 -- ============================================================
 --  WINDOW
 -- ============================================================
-local window   = library:Window({ name="esp", toggle_key="F2" })
-local tab_loot = window:tab({ name="loot" })
-local tab_cfg  = window:tab({ name="config" })
+local window    = library:Window({ name="esp", toggle_key="F2" })
+local tab_loot  = window:tab({ name="loot" })
+local tab_ammo  = window:tab({ name="ammo" })
+local tab_cfg   = window:tab({ name="config" })
 
 -- ============================================================
---  LOOT TAB — two columns
+--  LOOT TAB
 -- ============================================================
 local col_left  = tab_loot:column()
 local col_right = tab_loot:column()
 
--- LEFT: settings section
 local s_set = col_left:section({ name="settings" })
 s_set:toggle({ name="enabled",  flag="esp_enabled",  default=true })
 s_set:toggle({ name="boxes",    flag="esp_boxes",    default=true })
@@ -30,12 +30,10 @@ s_set:toggle({ name="names",    flag="esp_names",    default=true })
 s_set:toggle({ name="distance", flag="esp_dist",     default=true })
 s_set:slider({ name="max dist", flag="esp_maxdist",  min=50, max=2000, default=500, interval=50, suffix=" st" })
 
--- LEFT: colours section
 local s_col = col_left:section({ name="colours" })
 s_col:dropdown({ name="box colour",  flag="esp_boxcol",  items={"yellow","red","green","white","cyan"} })
 s_col:dropdown({ name="text colour", flag="esp_textcol", items={"yellow","red","green","white","cyan"} })
 
--- RIGHT: categories section
 local s_cat = col_right:section({ name="categories" })
 s_cat:toggle({ name="assault rifles", flag="cat_ar",      default=true })
 s_cat:toggle({ name="battle rifles",  flag="cat_br",      default=true })
@@ -44,35 +42,65 @@ s_cat:toggle({ name="smgs",           flag="cat_smg",     default=true })
 s_cat:toggle({ name="pistols",        flag="cat_pistol",  default=true })
 s_cat:toggle({ name="snipers",        flag="cat_sniper",  default=true })
 s_cat:toggle({ name="shotguns",       flag="cat_shotgun", default=true })
-s_cat:toggle({ name="ammo",           flag="cat_ammo",    default=false })
 s_cat:toggle({ name="special",        flag="cat_special", default=true })
+
+-- ============================================================
+--  AMMO TAB
+-- ============================================================
+local col_ammo_left  = tab_ammo:column()
+local col_ammo_right = tab_ammo:column()
+
+local s_ammo_l = col_ammo_left:section({ name="rifle ammo" })
+s_ammo_l:toggle({ name="AK47 Ammo 30",    flag="ammo_ak47_30",    default=false })
+s_ammo_l:toggle({ name="AK47 Ammo 40",    flag="ammo_ak47_40",    default=false })
+s_ammo_l:toggle({ name="AK Ammo 45",      flag="ammo_ak_45",      default=false })
+s_ammo_l:toggle({ name="STANAG Ammo 50",  flag="ammo_stanag_50",  default=false })
+s_ammo_l:toggle({ name="STANAG Ammo 100", flag="ammo_stanag_100", default=false })
+s_ammo_l:toggle({ name="M14 Ammo 50",     flag="ammo_m14_50",     default=false })
+s_ammo_l:toggle({ name="AR10 Ammo 30",    flag="ammo_ar10_30",    default=false })
+s_ammo_l:toggle({ name="M3 Ammo 30",      flag="ammo_m3_30",      default=false })
+
+local s_ammo_lmg = col_ammo_left:section({ name="lmg ammo" })
+s_ammo_lmg:toggle({ name="MK48 Ammo 100",  flag="ammo_mk48_100",  default=false })
+s_ammo_lmg:toggle({ name="M249 Ammo 100",  flag="ammo_m249_100",  default=false })
+s_ammo_lmg:toggle({ name="PKP Ammo 200",   flag="ammo_pkp_200",   default=false })
+
+local s_ammo_r = col_ammo_right:section({ name="pistol / smg ammo" })
+s_ammo_r:toggle({ name="TEC9 Ammo 32",    flag="ammo_tec9_32",   default=false })
+s_ammo_r:toggle({ name="TEC9 Ammo 50",    flag="ammo_tec9_50",   default=false })
+s_ammo_r:toggle({ name="M9 Ammo 50",      flag="ammo_m9_50",     default=false })
+s_ammo_r:toggle({ name="PP19 Ammo 64",    flag="ammo_pp19_64",   default=false })
+s_ammo_r:toggle({ name="PPSH Ammo 75",    flag="ammo_ppsh_75",   default=false })
+s_ammo_r:toggle({ name="M1911 Ammo 7",    flag="ammo_m1911_7",   default=false })
+s_ammo_r:toggle({ name="Maverick Ammo 6", flag="ammo_mav_6",     default=false })
+s_ammo_r:toggle({ name="Ruger22 Ammo 10", flag="ammo_ruger_10",  default=false })
 
 -- ============================================================
 --  CONFIG TAB
 -- ============================================================
-local col_cfg   = tab_cfg:column()
-local s_info    = col_cfg:section({ name="info" })
+local col_cfg = tab_cfg:column()
+local s_info  = col_cfg:section({ name="info" })
 s_info:button({ name="github: certifiedarab1", callback=function() end })
 
 -- ============================================================
 --  LOOT TABLES
 -- ============================================================
 local ASSAULT_RIFLES = {
-    ["AKM"]    = true, ["AK-104"] = true, ["M4A1"]   = true,
-    ["FAL"]    = true, ["Fedorov"]= true, ["AK-47"]  = true,
-    ["G36K"]   = true,
+    ["AKM"] = true, ["AK-104"] = true, ["M4A1"]    = true,
+    ["FAL"] = true, ["Fedorov"]= true, ["AK-47"]   = true,
+    ["G36K"]= true,
 }
 local BATTLE_RIFLES = {
-    ["M14"]     = true, ["HK-417"]  = true,
-    ["MK-17"]   = true, ["Enfield"] = true,
+    ["M14"] = true, ["HK-417"] = true,
+    ["MK-17"]= true, ["Enfield"]= true,
 }
 local LMGS = {
-    ["MK-48"] = true, ["M249"] = true,
-    ["RPK"]   = true, ["PKP"]  = true,
+    ["MK-48"]= true, ["M249"]= true,
+    ["RPK"]  = true, ["PKP"] = true,
 }
 local SMGS = {
-    ["CBJ-MS"]  = true, ["TEC-9"]   = true,
-    ["PPSH"]    = true, ["Patriot"] = true,
+    ["CBJ-MS"] = true, ["TEC-9"]   = true,
+    ["PPSH"]   = true, ["Patriot"] = true,
 }
 local PISTOLS = {
     ["Makarov"]   = true, ["M93R"]      = true,
@@ -86,26 +114,34 @@ local SHOTGUNS = {
     ["Auto-5"] = true,
 }
 local SPECIAL = {
-    ["Umbrella"]              = true,
-    ["Brown Military Backpack"] = true,
-    ["Sword"]                 = true,
-}
-local AMMO = {
-    ["PPSHAmmo75"]    = true, ["M14Ammo50"]     = true,
-    ["STANAGAmmo100"] = true, ["STANAGAmmo50"]  = true,
-    ["MK48Ammo100"]   = true, ["M249Ammo100"]   = true,
-    ["PKPAmmo200"]    = true, ["AKAmmo45"]      = true,
-    ["TEC9Ammo32"]    = true, ["TEC9Ammo50"]    = true,
-    ["AK47Ammo40"]    = true, ["M9Ammo50"]      = true,
-    ["AK47Ammo30"]    = true, ["MK48Ammo100"]   = true,
-    ["AR10Ammo30"]    = true, ["PP19Ammo64"]    = true,
-    ["M1911Ammo7"]    = true, ["MavericAmmo6"]  = true,
-    ["Ruger22Ammo10"] = true, ["M249Ammo100"]   = true,
-    ["MK48Ammo100"]   = true, ["PKPAmmo200"]    = true,
-    ["M3Ammo30"]      = true, ["MK48Ammo100"]   = true,
+    ["Umbrella"]               = true,
+    ["Brown Military Backpack"]= true,
+    ["Sword"]                  = true,
 }
 
--- category flag map
+-- individual ammo entries mapped to their flag
+local AMMO_FLAGS = {
+    { flag="ammo_ak47_30",    name="AK47Ammo30"    },
+    { flag="ammo_ak47_40",    name="AK47Ammo40"    },
+    { flag="ammo_ak_45",      name="AKAmmo45"      },
+    { flag="ammo_stanag_50",  name="STANAGAmmo50"  },
+    { flag="ammo_stanag_100", name="STANAGAmmo100" },
+    { flag="ammo_m14_50",     name="M14Ammo50"     },
+    { flag="ammo_ar10_30",    name="AR10Ammo30"    },
+    { flag="ammo_m3_30",      name="M3Ammo30"      },
+    { flag="ammo_mk48_100",   name="MK48Ammo100"   },
+    { flag="ammo_m249_100",   name="M249Ammo100"   },
+    { flag="ammo_pkp_200",    name="PKPAmmo200"    },
+    { flag="ammo_tec9_32",    name="TEC9Ammo32"    },
+    { flag="ammo_tec9_50",    name="TEC9Ammo50"    },
+    { flag="ammo_m9_50",      name="M9Ammo50"      },
+    { flag="ammo_pp19_64",    name="PP19Ammo64"    },
+    { flag="ammo_ppsh_75",    name="PPSHAmmo75"    },
+    { flag="ammo_m1911_7",    name="M1911Ammo7"    },
+    { flag="ammo_mav_6",      name="MavericAmmo6"  },
+    { flag="ammo_ruger_10",   name="Ruger22Ammo10" },
+}
+
 local CAT_FLAGS = {
     { flag="cat_ar",      items=ASSAULT_RIFLES },
     { flag="cat_br",      items=BATTLE_RIFLES  },
@@ -115,10 +151,8 @@ local CAT_FLAGS = {
     { flag="cat_sniper",  items=SNIPERS        },
     { flag="cat_shotgun", items=SHOTGUNS       },
     { flag="cat_special", items=SPECIAL        },
-    { flag="cat_ammo",    items=AMMO           },
 }
 
--- colour lookup
 local COLOURS = {
     ["yellow"] = {255, 255, 0},
     ["red"]    = {255, 0,   0},
@@ -133,17 +167,24 @@ local COLOURS = {
 window:Render()
 
 -- ============================================================
---  ESP LOGIC (runs every frame)
+--  ESP LOGIC
 -- ============================================================
 if not library.flags.esp_enabled then return end
 
--- build active loot table from enabled categories
+-- build active loot from enabled categories
 local ACTIVE = {}
 for _, cat in next, CAT_FLAGS do
     if library.flags[cat.flag] then
         for k, v in next, cat.items do
             ACTIVE[k] = v
         end
+    end
+end
+
+-- add individually toggled ammo
+for _, ammo in next, AMMO_FLAGS do
+    if library.flags[ammo.flag] then
+        ACTIVE[ammo.name] = true
     end
 end
 
@@ -179,9 +220,9 @@ for _, chunk in next, dx9.GetChildren(Chunks) do
             local pos = dx9.GetPosition(part)
 
             if pos ~= nil then
-                local ddx   = lpx - pos.x
-                local ddy   = lpy - pos.y
-                local ddz   = lpz - pos.z
+                local ddx    = lpx - pos.x
+                local ddy    = lpy - pos.y
+                local ddz    = lpz - pos.z
                 local distSq = ddx*ddx + ddy*ddy + ddz*ddz
 
                 if distSq <= maxDistSq then
@@ -195,7 +236,6 @@ for _, chunk in next, dx9.GetChildren(Chunks) do
 
                         local bs = 14
 
-                        -- box
                         if library.flags.esp_boxes then
                             dx9.DrawBox(
                                 {sp.x - bs, sp.y - bs},
@@ -204,7 +244,6 @@ for _, chunk in next, dx9.GetChildren(Chunks) do
                             )
                         end
 
-                        -- tracer
                         if library.flags.esp_tracers then
                             dx9.DrawLine(
                                 {cx, screenH},
@@ -213,7 +252,6 @@ for _, chunk in next, dx9.GetChildren(Chunks) do
                             )
                         end
 
-                        -- name
                         if library.flags.esp_names then
                             dx9.DrawString(
                                 {sp.x - 10, sp.y - bs - 14},
@@ -222,7 +260,6 @@ for _, chunk in next, dx9.GetChildren(Chunks) do
                             )
                         end
 
-                        -- distance
                         if library.flags.esp_dist then
                             dx9.DrawString(
                                 {sp.x - 10, sp.y - bs - 4},
