@@ -83,10 +83,12 @@ s_ammo_pistol:toggle({ name="Ruger22 Ammo 10", flag="ammo_ruger_10", default=fal
 -- ============================================================
 local ASSAULT_RIFLES = {
     ["AKM"]=true,["AK-104"]=true,["M4A1"]=true,
-    ["FAL"]=true,["Fedorov"]=true,["AK-47"]=true,["G36K"]=true,
+    ["Fedorov"]=true,["AK-47"]=true,["G36K"]=true,
+    ["AK-12"]=true,
 }
 local BATTLE_RIFLES = {
     ["M14"]=true,["HK-417"]=true,["MK-17"]=true,["Enfield"]=true,
+    ["FAL"]=true,
 }
 local LMGS = {
     ["MK-48"]=true,["M249"]=true,["RPK"]=true,["PKP"]=true,
@@ -98,10 +100,11 @@ local PISTOLS = {
     ["Makarov"]=true,["M93R"]=true,["G18"]=true,
     ["Model 459"]=true,["C275"]=true,
 }
-local SNIPERS  = { ["Mosin Nagant"]=true,["Stunna"]=true }
+local SNIPERS  = { ["Mosin Nagant"]=true }
 local SHOTGUNS = { ["Auto-5"]=true }
 local SPECIAL  = {
-    ["Umbrella"]=true,["Brown Military Backpack"]=true,["Sword"]=true,
+    ["Umbrella"]=true,["Brown Military Backpack"]=true,
+    ["Green Military Backpack"]=true,["Sword"]=true,
 }
 
 local CAT_FLAGS = {
@@ -122,6 +125,7 @@ local AMMO_FLAGS = {
     { flag="ammo_stanag_50",  name="STANAGAmmo50"  },
     { flag="ammo_stanag_100", name="STANAGAmmo100" },
     { flag="ammo_m14_50",     name="M14Ammo50"     },
+    { flag="ammo_m14_20",     name="M14Ammo20"     },
     { flag="ammo_ar10_30",    name="AR10Ammo30"    },
     { flag="ammo_m3_30",      name="M3Ammo30"      },
     { flag="ammo_mk48_100",   name="MK48Ammo100"   },
