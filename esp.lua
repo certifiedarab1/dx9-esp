@@ -11,9 +11,6 @@ if not _G.esp_loaded then
     local tab_loot = window:tab({ name="loot" })
     local tab_ammo = window:tab({ name="ammo" })
 
-    -- =====================
-    --  LOOT TAB
-    -- =====================
     local col_left  = tab_loot:column()
     local col_right = tab_loot:column()
 
@@ -40,12 +37,9 @@ if not _G.esp_loaded then
     s_cat:toggle({ name="special",        flag="cat_special", default=true })
 
     local s_health = col_right:section({ name="health" })
-    s_health:toggle({ name="blood bag",    flag="health_bloodbag",    default=true })
-    s_health:toggle({ name="painkickers",  flag="health_painkickers", default=true })
+    s_health:toggle({ name="blood bag",   flag="health_bloodbag",    default=true })
+    s_health:toggle({ name="painkickers", flag="health_painkickers", default=true })
 
-    -- =====================
-    --  AMMO TAB
-    -- =====================
     local col_ammo_left  = tab_ammo:column()
     local col_ammo_right = tab_ammo:column()
 
@@ -88,9 +82,6 @@ _G.esp_window:Render()
 
 if not library.flags.esp_enabled then return end
 
--- ============================================================
---  LOOT TABLES
--- ============================================================
 local ASSAULT_RIFLES = {
     ["AKM"]=true,["AK-104"]=true,["M4A1"]=true,
     ["FAL"]=true,["Fedorov"]=true,["AK-47"]=true,["G36K"]=true,
@@ -118,7 +109,6 @@ local SPECIAL = {
     ["Umbrella"]=true,["Brown Military Backpack"]=true,["Sword"]=true,
 }
 
--- category flag map
 local CAT_FLAGS = {
     { flag="cat_ar",      items=ASSAULT_RIFLES },
     { flag="cat_br",      items=BATTLE_RIFLES  },
@@ -130,7 +120,6 @@ local CAT_FLAGS = {
     { flag="cat_special", items=SPECIAL        },
 }
 
--- individual ammo flag map
 local AMMO_FLAGS = {
     { flag="ammo_ak47_30",    name="AK47Ammo30"    },
     { flag="ammo_ak47_40",    name="AK47Ammo40"    },
@@ -153,7 +142,6 @@ local AMMO_FLAGS = {
     { flag="ammo_ruger_10",   name="Ruger22Ammo10" },
 }
 
--- individual health flag map
 local HEALTH_FLAGS = {
     { flag="health_bloodbag",    name="Blood Bag"   },
     { flag="health_painkickers", name="Painkickers" },
@@ -164,35 +152,23 @@ local COLOURS = {
     ["green"]={0,255,0},["white"]={255,255,255},["cyan"]={0,255,255},
 }
 
--- ============================================================
---  BUILD ACTIVE LOOT TABLE
--- ============================================================
 local ACTIVE = {}
-
--- weapon categories
 for _, cat in next, CAT_FLAGS do
     if library.flags[cat.flag] then
         for k, v in next, cat.items do ACTIVE[k] = v end
     end
 end
-
--- individual ammo
 for _, ammo in next, AMMO_FLAGS do
     if library.flags[ammo.flag] then
         ACTIVE[ammo.name] = true
     end
 end
-
--- individual health items
 for _, h in next, HEALTH_FLAGS do
     if library.flags[h.flag] then
         ACTIVE[h.name] = true
     end
 end
 
--- ============================================================
---  ESP DRAW
--- ============================================================
 local screenW   = dx9.size().width
 local screenH   = dx9.size().height
 local cx        = screenW / 2
