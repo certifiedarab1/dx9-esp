@@ -11,39 +11,48 @@ local Chunks    = dx9.FindFirstChild(Workspace, "Chunks")
 -- ============================================================
 --  WINDOW
 -- ============================================================
-local window   = library:Window({ name="esp", toggle_key="F2" })
-local tab_loot = window:tab({ name="loot" })
-local tab_ammo = window:tab({ name="ammo" })
+local window    = library:Window({ name="loot esp", toggle_key="F2" })
+local tab_main  = window:tab({ name="visuals" })
+local tab_loot  = window:tab({ name="loot" })
+local tab_ammo  = window:tab({ name="ammo" })
+
+-- ============================================================
+--  VISUALS TAB
+-- ============================================================
+local col_vis = tab_main:column()
+
+local s_toggle = col_vis:section({ name="esp" })
+s_toggle:toggle({ name="enable esp",   flag="esp_enabled", default=true })
+s_toggle:toggle({ name="show boxes",   flag="esp_boxes",   default=true })
+s_toggle:toggle({ name="show tracers", flag="esp_tracers", default=false })
+s_toggle:toggle({ name="show names",   flag="esp_names",   default=true })
+s_toggle:toggle({ name="show distance",flag="esp_dist",    default=true })
+
+local s_style = col_vis:section({ name="style" })
+s_style:slider({   name="max distance", flag="esp_maxdist", min=50, max=2000, default=500, interval=50, suffix=" st" })
+s_style:dropdown({ name="box colour",   flag="esp_boxcol",  items={"yellow","red","green","white","cyan"} })
+s_style:dropdown({ name="text colour",  flag="esp_textcol", items={"yellow","red","green","white","cyan"} })
 
 -- ============================================================
 --  LOOT TAB
 -- ============================================================
-local col_left  = tab_loot:column()
-local col_right = tab_loot:column()
+local col_loot_left  = tab_loot:column()
+local col_loot_right = tab_loot:column()
 
-local s_set = col_left:section({ name="settings" })
-s_set:toggle({ name="enabled",  flag="esp_enabled",  default=true })
-s_set:toggle({ name="boxes",    flag="esp_boxes",    default=true })
-s_set:toggle({ name="tracers",  flag="esp_tracers",  default=false })
-s_set:toggle({ name="names",    flag="esp_names",    default=true })
-s_set:toggle({ name="distance", flag="esp_dist",     default=true })
-s_set:slider({ name="max dist", flag="esp_maxdist",  min=50, max=2000, default=500, interval=50, suffix=" st" })
+local s_weapons = col_loot_left:section({ name="weapons" })
+s_weapons:toggle({ name="assault rifles", flag="cat_ar",      default=true })
+s_weapons:toggle({ name="battle rifles",  flag="cat_br",      default=true })
+s_weapons:toggle({ name="lmgs",           flag="cat_lmg",     default=true })
+s_weapons:toggle({ name="smgs",           flag="cat_smg",     default=true })
+s_weapons:toggle({ name="pistols",        flag="cat_pistol",  default=true })
+s_weapons:toggle({ name="snipers",        flag="cat_sniper",  default=true })
+s_weapons:toggle({ name="shotguns",       flag="cat_shotgun", default=true })
 
-local s_col = col_left:section({ name="colours" })
-s_col:dropdown({ name="box colour",  flag="esp_boxcol",  items={"yellow","red","green","white","cyan"} })
-s_col:dropdown({ name="text colour", flag="esp_textcol", items={"yellow","red","green","white","cyan"} })
+local s_misc = col_loot_left:section({ name="misc" })
+s_misc:toggle({ name="special",      flag="cat_special",        default=true })
+s_misc:toggle({ name="c4 & detonator", flag="cat_c4",           default=true })
 
-local s_cat = col_right:section({ name="categories" })
-s_cat:toggle({ name="assault rifles", flag="cat_ar",      default=true })
-s_cat:toggle({ name="battle rifles",  flag="cat_br",      default=true })
-s_cat:toggle({ name="lmgs",           flag="cat_lmg",     default=true })
-s_cat:toggle({ name="smgs",           flag="cat_smg",     default=true })
-s_cat:toggle({ name="pistols",        flag="cat_pistol",  default=true })
-s_cat:toggle({ name="snipers",        flag="cat_sniper",  default=true })
-s_cat:toggle({ name="shotguns",       flag="cat_shotgun", default=true })
-s_cat:toggle({ name="special",        flag="cat_special", default=true })
-
-local s_health = col_right:section({ name="health" })
+local s_health = col_loot_right:section({ name="health" })
 s_health:toggle({ name="blood bag",   flag="health_bloodbag",    default=true })
 s_health:toggle({ name="painkickers", flag="health_painkickers", default=true })
 
@@ -60,6 +69,7 @@ s_ammo_rifle:toggle({ name="AK Ammo 45",      flag="ammo_ak_45",      default=fa
 s_ammo_rifle:toggle({ name="STANAG Ammo 50",  flag="ammo_stanag_50",  default=false })
 s_ammo_rifle:toggle({ name="STANAG Ammo 100", flag="ammo_stanag_100", default=false })
 s_ammo_rifle:toggle({ name="M14 Ammo 50",     flag="ammo_m14_50",     default=false })
+s_ammo_rifle:toggle({ name="M14 Ammo 20",     flag="ammo_m14_20",     default=false })
 s_ammo_rifle:toggle({ name="AR10 Ammo 30",    flag="ammo_ar10_30",    default=false })
 s_ammo_rifle:toggle({ name="M3 Ammo 30",      flag="ammo_m3_30",      default=false })
 
@@ -69,26 +79,21 @@ s_ammo_lmg:toggle({ name="M249 Ammo 100", flag="ammo_m249_100", default=false })
 s_ammo_lmg:toggle({ name="PKP Ammo 200",  flag="ammo_pkp_200",  default=false })
 
 local s_ammo_pistol = col_ammo_right:section({ name="pistol / smg ammo" })
-s_ammo_pistol:toggle({ name="TEC9 Ammo 32",    flag="ammo_tec9_32",  default=false })
-s_ammo_pistol:toggle({ name="TEC9 Ammo 50",    flag="ammo_tec9_50",  default=false })
-s_ammo_pistol:toggle({ name="M9 Ammo 50",      flag="ammo_m9_50",    default=false })
-s_ammo_pistol:toggle({ name="PP19 Ammo 64",    flag="ammo_pp19_64",  default=false })
-s_ammo_pistol:toggle({ name="PPSH Ammo 75",    flag="ammo_ppsh_75",  default=false })
-s_ammo_pistol:toggle({ name="M1911 Ammo 7",    flag="ammo_m1911_7",  default=false })
-s_ammo_pistol:toggle({ name="Maverick Ammo 6", flag="ammo_mav_6",    default=false })
-s_ammo_pistol:toggle({ name="Ruger22 Ammo 10", flag="ammo_ruger_10", default=false })
+s_ammo_pistol:toggle({ name="TEC9 Ammo 32",  flag="ammo_tec9_32", default=false })
+s_ammo_pistol:toggle({ name="TEC9 Ammo 50",  flag="ammo_tec9_50", default=false })
+s_ammo_pistol:toggle({ name="M9 Ammo 50",    flag="ammo_m9_50",   default=false })
+s_ammo_pistol:toggle({ name="PP19 Ammo 64",  flag="ammo_pp19_64", default=false })
+s_ammo_pistol:toggle({ name="PPSH Ammo 75",  flag="ammo_ppsh_75", default=false })
 
 -- ============================================================
 --  LOOT TABLES
 -- ============================================================
 local ASSAULT_RIFLES = {
     ["AKM"]=true,["AK-104"]=true,["M4A1"]=true,
-    ["Fedorov"]=true,["AK-47"]=true,["G36K"]=true,
-    ["AK-12"]=true,
+    ["Fedorov"]=true,["AK-47"]=true,["G36K"]=true,["AK-12"]=true,
 }
 local BATTLE_RIFLES = {
-    ["M14"]=true,["HK-417"]=true,["MK-17"]=true,["Enfield"]=true,
-    ["FAL"]=true,
+    ["M14"]=true,["HK-417"]=true,["MK-17"]=true,["Enfield"]=true,["FAL"]=true,
 }
 local LMGS = {
     ["MK-48"]=true,["M249"]=true,["RPK"]=true,["PKP"]=true,
@@ -106,6 +111,9 @@ local SPECIAL  = {
     ["Umbrella"]=true,["Brown Military Backpack"]=true,
     ["Green Military Backpack"]=true,["Sword"]=true,
 }
+local C4 = {
+    ["C4"]=true,["C4 Detonator"]=true,
+}
 
 local CAT_FLAGS = {
     { flag="cat_ar",      items=ASSAULT_RIFLES },
@@ -116,6 +124,7 @@ local CAT_FLAGS = {
     { flag="cat_sniper",  items=SNIPERS        },
     { flag="cat_shotgun", items=SHOTGUNS       },
     { flag="cat_special", items=SPECIAL        },
+    { flag="cat_c4",      items=C4             },
 }
 
 local AMMO_FLAGS = {
@@ -136,9 +145,6 @@ local AMMO_FLAGS = {
     { flag="ammo_m9_50",      name="M9Ammo50"      },
     { flag="ammo_pp19_64",    name="PP19Ammo64"    },
     { flag="ammo_ppsh_75",    name="PPSHAmmo75"    },
-    { flag="ammo_m1911_7",    name="M1911Ammo7"    },
-    { flag="ammo_mav_6",      name="MavericAmmo6"  },
-    { flag="ammo_ruger_10",   name="Ruger22Ammo10" },
 }
 
 local HEALTH_FLAGS = {
