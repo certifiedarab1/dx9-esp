@@ -22,11 +22,11 @@ local tab_ammo  = window:tab({ name="ammo" })
 local col_vis = tab_main:column()
 
 local s_toggle = col_vis:section({ name="esp" })
-s_toggle:toggle({ name="enable esp",   flag="esp_enabled", default=true })
-s_toggle:toggle({ name="show boxes",   flag="esp_boxes",   default=true })
-s_toggle:toggle({ name="show tracers", flag="esp_tracers", default=false })
-s_toggle:toggle({ name="show names",   flag="esp_names",   default=true })
-s_toggle:toggle({ name="show distance",flag="esp_dist",    default=true })
+s_toggle:toggle({ name="enable esp",    flag="esp_enabled", default=true })
+s_toggle:toggle({ name="show boxes",    flag="esp_boxes",   default=true })
+s_toggle:toggle({ name="show tracers",  flag="esp_tracers", default=false })
+s_toggle:toggle({ name="show names",    flag="esp_names",   default=true })
+s_toggle:toggle({ name="show distance", flag="esp_dist",    default=true })
 
 local s_style = col_vis:section({ name="style" })
 s_style:slider({   name="max distance", flag="esp_maxdist", min=50, max=2000, default=500, interval=50, suffix=" st" })
@@ -49,8 +49,8 @@ s_weapons:toggle({ name="snipers",        flag="cat_sniper",  default=true })
 s_weapons:toggle({ name="shotguns",       flag="cat_shotgun", default=true })
 
 local s_misc = col_loot_left:section({ name="misc" })
-s_misc:toggle({ name="special",      flag="cat_special",        default=true })
-s_misc:toggle({ name="c4 & detonator", flag="cat_c4",           default=true })
+s_misc:toggle({ name="special",        flag="cat_special", default=true })
+s_misc:toggle({ name="c4 & detonator", flag="cat_c4",      default=true })
 
 local s_health = col_loot_right:section({ name="health" })
 s_health:toggle({ name="blood bag",   flag="health_bloodbag",    default=true })
@@ -70,8 +70,6 @@ s_ammo_rifle:toggle({ name="STANAG Ammo 50",  flag="ammo_stanag_50",  default=fa
 s_ammo_rifle:toggle({ name="STANAG Ammo 100", flag="ammo_stanag_100", default=false })
 s_ammo_rifle:toggle({ name="M14 Ammo 50",     flag="ammo_m14_50",     default=false })
 s_ammo_rifle:toggle({ name="M14 Ammo 20",     flag="ammo_m14_20",     default=false })
-s_ammo_rifle:toggle({ name="AR10 Ammo 30",    flag="ammo_ar10_30",    default=false })
-s_ammo_rifle:toggle({ name="M3 Ammo 30",      flag="ammo_m3_30",      default=false })
 
 local s_ammo_lmg = col_ammo_left:section({ name="lmg ammo" })
 s_ammo_lmg:toggle({ name="MK48 Ammo 100", flag="ammo_mk48_100", default=false })
@@ -82,7 +80,7 @@ local s_ammo_pistol = col_ammo_right:section({ name="pistol / smg ammo" })
 s_ammo_pistol:toggle({ name="TEC9 Ammo 32",  flag="ammo_tec9_32", default=false })
 s_ammo_pistol:toggle({ name="TEC9 Ammo 50",  flag="ammo_tec9_50", default=false })
 s_ammo_pistol:toggle({ name="M9 Ammo 50",    flag="ammo_m9_50",   default=false })
-s_ammo_pistol:toggle({ name="PP19 Ammo 64",  flag="ammo_pp19_64", default=false })
+s_ammo_pistol:toggle({ name="M9 Ammo 32",    flag="ammo_m9_32",   default=false })
 s_ammo_pistol:toggle({ name="PPSH Ammo 75",  flag="ammo_ppsh_75", default=false })
 
 -- ============================================================
@@ -135,15 +133,13 @@ local AMMO_FLAGS = {
     { flag="ammo_stanag_100", name="STANAGAmmo100" },
     { flag="ammo_m14_50",     name="M14Ammo50"     },
     { flag="ammo_m14_20",     name="M14Ammo20"     },
-    { flag="ammo_ar10_30",    name="AR10Ammo30"    },
-    { flag="ammo_m3_30",      name="M3Ammo30"      },
     { flag="ammo_mk48_100",   name="MK48Ammo100"   },
     { flag="ammo_m249_100",   name="M249Ammo100"   },
     { flag="ammo_pkp_200",    name="PKPAmmo200"    },
     { flag="ammo_tec9_32",    name="TEC9Ammo32"    },
     { flag="ammo_tec9_50",    name="TEC9Ammo50"    },
     { flag="ammo_m9_50",      name="M9Ammo50"      },
-    { flag="ammo_pp19_64",    name="PP19Ammo64"    },
+    { flag="ammo_m9_32",      name="M9Ammo32"      },
     { flag="ammo_ppsh_75",    name="PPSHAmmo75"    },
 }
 
