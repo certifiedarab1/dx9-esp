@@ -56,6 +56,10 @@ local s_health = col_loot_right:section({ name="health" })
 s_health:toggle({ name="blood bag",   flag="health_bloodbag",    default=true })
 s_health:toggle({ name="painkickers", flag="health_painkickers", default=true })
 
+local s_packs = col_loot_right:section({ name="containers" })
+s_packs:toggle({ name="daypacks",          flag="cat_daypacks",   default=true })
+s_packs:toggle({ name="military backpacks",flag="cat_milpacks",   default=true })
+
 -- ============================================================
 --  AMMO TAB
 -- ============================================================
@@ -106,23 +110,33 @@ local PISTOLS = {
 local SNIPERS  = { ["Mosin Nagant"]=true }
 local SHOTGUNS = { ["Auto-5"]=true }
 local SPECIAL  = {
-    ["Umbrella"]=true,["Brown Military Backpack"]=true,
-    ["Green Military Backpack"]=true,["Sword"]=true,
+    ["Umbrella"]=true,["Sword"]=true,
 }
 local C4 = {
     ["C4"]=true,["C4 Detonator"]=true,
 }
+local DAYPACKS = {
+    ["Red Daypack"]=true,["Black Daypack"]=true,
+    ["Yellow Daypack"]=true,["Gray Daypack"]=true,
+    ["Blue Daypack"]=true,
+}
+local MILPACKS = {
+    ["White Military Backpack"]=true,["Brown Military Backpack"]=true,
+    ["Blue Military Backpack"]=true,["Green Military Backpack"]=true,
+}
 
 local CAT_FLAGS = {
-    { flag="cat_ar",      items=ASSAULT_RIFLES },
-    { flag="cat_br",      items=BATTLE_RIFLES  },
-    { flag="cat_lmg",     items=LMGS           },
-    { flag="cat_smg",     items=SMGS           },
-    { flag="cat_pistol",  items=PISTOLS        },
-    { flag="cat_sniper",  items=SNIPERS        },
-    { flag="cat_shotgun", items=SHOTGUNS       },
-    { flag="cat_special", items=SPECIAL        },
-    { flag="cat_c4",      items=C4             },
+    { flag="cat_ar",       items=ASSAULT_RIFLES },
+    { flag="cat_br",       items=BATTLE_RIFLES  },
+    { flag="cat_lmg",      items=LMGS           },
+    { flag="cat_smg",      items=SMGS           },
+    { flag="cat_pistol",   items=PISTOLS        },
+    { flag="cat_sniper",   items=SNIPERS        },
+    { flag="cat_shotgun",  items=SHOTGUNS       },
+    { flag="cat_special",  items=SPECIAL        },
+    { flag="cat_c4",       items=C4             },
+    { flag="cat_daypacks", items=DAYPACKS       },
+    { flag="cat_milpacks", items=MILPACKS       },
 }
 
 local AMMO_FLAGS = {
