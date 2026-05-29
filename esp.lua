@@ -11,10 +11,10 @@ local Chunks    = dx9.FindFirstChild(Workspace, "Chunks")
 -- ============================================================
 --  WINDOW
 -- ============================================================
-local window    = library:Window({ name="loot esp", toggle_key="F2" })
-local tab_main  = window:tab({ name="visuals" })
-local tab_loot  = window:tab({ name="loot" })
-local tab_ammo  = window:tab({ name="ammo" })
+local window   = library:Window({ name="loot esp", toggle_key="F2" })
+local tab_main = window:tab({ name="visuals" })
+local tab_loot = window:tab({ name="loot" })
+local tab_ammo = window:tab({ name="ammo" })
 
 -- ============================================================
 --  VISUALS TAB
@@ -49,16 +49,17 @@ s_weapons:toggle({ name="snipers",        flag="cat_sniper",  default=true })
 s_weapons:toggle({ name="shotguns",       flag="cat_shotgun", default=true })
 
 local s_misc = col_loot_left:section({ name="misc" })
-s_misc:toggle({ name="special",        flag="cat_special", default=true })
-s_misc:toggle({ name="c4 & detonator", flag="cat_c4",      default=true })
+s_misc:toggle({ name="special",      flag="cat_special", default=true })
+s_misc:toggle({ name="c4",           flag="cat_c4",      default=true })
+s_misc:toggle({ name="c4 detonator", flag="cat_c4det",   default=true })
 
 local s_health = col_loot_right:section({ name="health" })
 s_health:toggle({ name="blood bag",   flag="health_bloodbag",    default=true })
 s_health:toggle({ name="painkickers", flag="health_painkickers", default=true })
 
 local s_packs = col_loot_right:section({ name="containers" })
-s_packs:toggle({ name="daypacks",          flag="cat_daypacks",   default=true })
-s_packs:toggle({ name="military backpacks",flag="cat_milpacks",   default=true })
+s_packs:toggle({ name="daypacks",           flag="cat_daypacks", default=true })
+s_packs:toggle({ name="military backpacks", flag="cat_milpacks", default=true })
 
 -- ============================================================
 --  AMMO TAB
@@ -70,9 +71,11 @@ local s_ammo_rifle = col_ammo_left:section({ name="rifle ammo" })
 s_ammo_rifle:toggle({ name="AK47 Ammo 30",    flag="ammo_ak47_30",    default=false })
 s_ammo_rifle:toggle({ name="AK47 Ammo 40",    flag="ammo_ak47_40",    default=false })
 s_ammo_rifle:toggle({ name="AK Ammo 45",      flag="ammo_ak_45",      default=false })
+s_ammo_rifle:toggle({ name="AK Ammo 75",      flag="ammo_ak_75",      default=false })
 s_ammo_rifle:toggle({ name="STANAG Ammo 50",  flag="ammo_stanag_50",  default=false })
 s_ammo_rifle:toggle({ name="STANAG Ammo 100", flag="ammo_stanag_100", default=false })
 s_ammo_rifle:toggle({ name="M14 Ammo 50",     flag="ammo_m14_50",     default=false })
+s_ammo_rifle:toggle({ name="M14 Ammo 30",     flag="ammo_m14_30",     default=false })
 s_ammo_rifle:toggle({ name="M14 Ammo 20",     flag="ammo_m14_20",     default=false })
 
 local s_ammo_lmg = col_ammo_left:section({ name="lmg ammo" })
@@ -109,12 +112,9 @@ local PISTOLS = {
 }
 local SNIPERS  = { ["Mosin Nagant"]=true }
 local SHOTGUNS = { ["Auto-5"]=true }
-local SPECIAL  = {
-    ["Umbrella"]=true,["Sword"]=true,
-}
-local C4 = {
-    ["C4"]=true,["C4 Detonator"]=true,
-}
+local SPECIAL  = { ["Umbrella"]=true,["Sword"]=true,["ToolBox"]=true }
+local C4       = { ["C4"]=true }
+local C4DET    = { ["C4 Detonator"]=true }
 local DAYPACKS = {
     ["Red Daypack"]=true,["Black Daypack"]=true,
     ["Yellow Daypack"]=true,["Gray Daypack"]=true,
@@ -135,6 +135,7 @@ local CAT_FLAGS = {
     { flag="cat_shotgun",  items=SHOTGUNS       },
     { flag="cat_special",  items=SPECIAL        },
     { flag="cat_c4",       items=C4             },
+    { flag="cat_c4det",    items=C4DET          },
     { flag="cat_daypacks", items=DAYPACKS       },
     { flag="cat_milpacks", items=MILPACKS       },
 }
@@ -143,9 +144,11 @@ local AMMO_FLAGS = {
     { flag="ammo_ak47_30",    name="AK47Ammo30"    },
     { flag="ammo_ak47_40",    name="AK47Ammo40"    },
     { flag="ammo_ak_45",      name="AKAmmo45"      },
+    { flag="ammo_ak_75",      name="AKAmmo75"      },
     { flag="ammo_stanag_50",  name="STANAGAmmo50"  },
     { flag="ammo_stanag_100", name="STANAGAmmo100" },
     { flag="ammo_m14_50",     name="M14Ammo50"     },
+    { flag="ammo_m14_30",     name="M14Ammo30"     },
     { flag="ammo_m14_20",     name="M14Ammo20"     },
     { flag="ammo_mk48_100",   name="MK48Ammo100"   },
     { flag="ammo_m249_100",   name="M249Ammo100"   },
@@ -173,6 +176,15 @@ local COLOURS = {
 window:Render()
 
 -- ============================================================
+--  HUD — bottom right
+-- ============================================================
+local screenW = dx9.size().width
+local screenH = dx9.size().height
+local white   = {255,255,255}
+
+dx9.DrawString({screenW-110, screenH-26}, white, "ping: "..dx9.GetPing().."ms")
+
+-- ============================================================
 --  ESP LOGIC
 -- ============================================================
 if not library.flags.esp_enabled then return end
@@ -190,8 +202,6 @@ for _, h in next, HEALTH_FLAGS do
     if library.flags[h.flag] then ACTIVE[h.name] = true end
 end
 
-local screenW   = dx9.size().width
-local screenH   = dx9.size().height
 local cx        = screenW / 2
 local lp        = dx9.get_localplayer()
 if lp == nil then return end
