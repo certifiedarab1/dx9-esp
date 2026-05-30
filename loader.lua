@@ -1,11 +1,16 @@
 -- ============================================================
---  LOOT ESP — supgLib UI + original dx9 ESP logic
+--  LOOT ESP
 -- ============================================================
 local Lib = loadstring(dx9.Get("https://raw.githubusercontent.com/soupg/DXLibUI/main/main.lua"))()
 
 local DataModel = dx9.GetDatamodel()
 local Workspace = dx9.FindFirstChild(DataModel, "Workspace")
 local Chunks    = dx9.FindFirstChild(Workspace, "Chunks")
+
+-- ============================================================
+--  TOGGLE STORAGE
+-- ============================================================
+local T = {}
 
 -- ============================================================
 --  WINDOW + TABS (first run only)
@@ -25,59 +30,65 @@ if Lib.FirstRun then
     local TabAmmo    = Window:AddTab("Ammo")
     TabVisuals:Focus()
 
-    -- Visuals
     local GbEsp   = TabVisuals:AddLeftGroupbox("ESP")
     local GbStyle = TabVisuals:AddRightGroupbox("Style")
-    GbEsp:AddToggle({ Index="esp_enabled", Default=true,  Text="Enable ESP" })
-    GbEsp:AddToggle({ Index="esp_boxes",   Default=true,  Text="Show Boxes" })
-    GbEsp:AddToggle({ Index="esp_tracers", Default=false, Text="Show Tracers" })
-    GbEsp:AddToggle({ Index="esp_names",   Default=true,  Text="Show Names" })
-    GbEsp:AddToggle({ Index="esp_dist",    Default=true,  Text="Show Distance" })
-    GbStyle:AddSlider({ Index="esp_maxdist", Default=500, Text="Max Distance", Min=50, Max=2000, Suffix=" st", Rounding=0 })
-    GbStyle:AddColorPicker({ Index="esp_boxcol",  Default={255,255,0}, Text="Box Colour" })
-    GbStyle:AddColorPicker({ Index="esp_textcol", Default={255,255,0}, Text="Text Colour" })
 
-    -- Loot
+    T.esp_enabled = GbEsp:AddToggle({ Index="esp_enabled", Default=true,  Text="Enable ESP" })
+    T.esp_boxes   = GbEsp:AddToggle({ Index="esp_boxes",   Default=true,  Text="Show Boxes" })
+    T.esp_tracers = GbEsp:AddToggle({ Index="esp_tracers", Default=false, Text="Show Tracers" })
+    T.esp_names   = GbEsp:AddToggle({ Index="esp_names",   Default=true,  Text="Show Names" })
+    T.esp_dist    = GbEsp:AddToggle({ Index="esp_dist",    Default=true,  Text="Show Distance" })
+
+    T.esp_maxdist = GbStyle:AddSlider({ Index="esp_maxdist", Default=500, Text="Max Distance", Min=50, Max=2000, Suffix=" st", Rounding=0 })
+    T.esp_boxcol  = GbStyle:AddColorPicker({ Index="esp_boxcol",  Default={255,255,0}, Text="Box Colour" })
+    T.esp_textcol = GbStyle:AddColorPicker({ Index="esp_textcol", Default={255,255,0}, Text="Text Colour" })
+
     local GbWeapons    = TabLoot:AddLeftGroupbox("Weapons")
     local GbMisc       = TabLoot:AddLeftGroupbox("Misc")
     local GbHealth     = TabLoot:AddRightGroupbox("Health")
     local GbContainers = TabLoot:AddRightGroupbox("Containers")
-    GbWeapons:AddToggle({ Index="cat_ar",      Default=true, Text="Assault Rifles" })
-    GbWeapons:AddToggle({ Index="cat_br",      Default=true, Text="Battle Rifles" })
-    GbWeapons:AddToggle({ Index="cat_lmg",     Default=true, Text="LMGs" })
-    GbWeapons:AddToggle({ Index="cat_smg",     Default=true, Text="SMGs" })
-    GbWeapons:AddToggle({ Index="cat_pistol",  Default=true, Text="Pistols" })
-    GbWeapons:AddToggle({ Index="cat_sniper",  Default=true, Text="Snipers" })
-    GbWeapons:AddToggle({ Index="cat_shotgun", Default=true, Text="Shotguns" })
-    GbMisc:AddToggle({ Index="cat_special", Default=true, Text="Special" })
-    GbMisc:AddToggle({ Index="cat_c4",      Default=true, Text="C4" })
-    GbMisc:AddToggle({ Index="cat_c4det",   Default=true, Text="C4 Detonator" })
-    GbHealth:AddToggle({ Index="health_bloodbag",    Default=true, Text="Blood Bag" })
-    GbHealth:AddToggle({ Index="health_painkickers", Default=true, Text="Painkickers" })
-    GbContainers:AddToggle({ Index="cat_daypacks", Default=true, Text="Daypacks" })
-    GbContainers:AddToggle({ Index="cat_milpacks", Default=true, Text="Military Backpacks" })
 
-    -- Ammo
+    T.cat_ar      = GbWeapons:AddToggle({ Index="cat_ar",      Default=true, Text="Assault Rifles" })
+    T.cat_br      = GbWeapons:AddToggle({ Index="cat_br",      Default=true, Text="Battle Rifles" })
+    T.cat_lmg     = GbWeapons:AddToggle({ Index="cat_lmg",     Default=true, Text="LMGs" })
+    T.cat_smg     = GbWeapons:AddToggle({ Index="cat_smg",     Default=true, Text="SMGs" })
+    T.cat_pistol  = GbWeapons:AddToggle({ Index="cat_pistol",  Default=true, Text="Pistols" })
+    T.cat_sniper  = GbWeapons:AddToggle({ Index="cat_sniper",  Default=true, Text="Snipers" })
+    T.cat_shotgun = GbWeapons:AddToggle({ Index="cat_shotgun", Default=true, Text="Shotguns" })
+
+    T.cat_special = GbMisc:AddToggle({ Index="cat_special", Default=true, Text="Special" })
+    T.cat_c4      = GbMisc:AddToggle({ Index="cat_c4",      Default=true, Text="C4" })
+    T.cat_c4det   = GbMisc:AddToggle({ Index="cat_c4det",   Default=true, Text="C4 Detonator" })
+
+    T.health_bloodbag    = GbHealth:AddToggle({ Index="health_bloodbag",    Default=true, Text="Blood Bag" })
+    T.health_painkickers = GbHealth:AddToggle({ Index="health_painkickers", Default=true, Text="Painkickers" })
+
+    T.cat_daypacks = GbContainers:AddToggle({ Index="cat_daypacks", Default=true, Text="Daypacks" })
+    T.cat_milpacks = GbContainers:AddToggle({ Index="cat_milpacks", Default=true, Text="Military Backpacks" })
+
     local GbRifleAmmo  = TabAmmo:AddLeftGroupbox("Rifle Ammo")
     local GbLMGAmmo    = TabAmmo:AddLeftGroupbox("LMG Ammo")
     local GbPistolAmmo = TabAmmo:AddRightGroupbox("Pistol / SMG Ammo")
-    GbRifleAmmo:AddToggle({ Index="ammo_ak47_30",    Default=false, Text="AK47 Ammo 30" })
-    GbRifleAmmo:AddToggle({ Index="ammo_ak47_40",    Default=false, Text="AK47 Ammo 40" })
-    GbRifleAmmo:AddToggle({ Index="ammo_ak_45",      Default=false, Text="AK Ammo 45" })
-    GbRifleAmmo:AddToggle({ Index="ammo_ak_75",      Default=false, Text="AK Ammo 75" })
-    GbRifleAmmo:AddToggle({ Index="ammo_stanag_50",  Default=false, Text="STANAG Ammo 50" })
-    GbRifleAmmo:AddToggle({ Index="ammo_stanag_100", Default=false, Text="STANAG Ammo 100" })
-    GbRifleAmmo:AddToggle({ Index="ammo_m14_50",     Default=false, Text="M14 Ammo 50" })
-    GbRifleAmmo:AddToggle({ Index="ammo_m14_30",     Default=false, Text="M14 Ammo 30" })
-    GbRifleAmmo:AddToggle({ Index="ammo_m14_20",     Default=false, Text="M14 Ammo 20" })
-    GbLMGAmmo:AddToggle({ Index="ammo_mk48_100", Default=false, Text="MK48 Ammo 100" })
-    GbLMGAmmo:AddToggle({ Index="ammo_m249_100", Default=false, Text="M249 Ammo 100" })
-    GbLMGAmmo:AddToggle({ Index="ammo_pkp_200",  Default=false, Text="PKP Ammo 200" })
-    GbPistolAmmo:AddToggle({ Index="ammo_tec9_32", Default=false, Text="TEC9 Ammo 32" })
-    GbPistolAmmo:AddToggle({ Index="ammo_tec9_50", Default=false, Text="TEC9 Ammo 50" })
-    GbPistolAmmo:AddToggle({ Index="ammo_m9_50",   Default=false, Text="M9 Ammo 50" })
-    GbPistolAmmo:AddToggle({ Index="ammo_m9_32",   Default=false, Text="M9 Ammo 32" })
-    GbPistolAmmo:AddToggle({ Index="ammo_ppsh_75", Default=false, Text="PPSH Ammo 75" })
+
+    T.ammo_ak47_30    = GbRifleAmmo:AddToggle({ Index="ammo_ak47_30",    Default=false, Text="AK47 Ammo 30" })
+    T.ammo_ak47_40    = GbRifleAmmo:AddToggle({ Index="ammo_ak47_40",    Default=false, Text="AK47 Ammo 40" })
+    T.ammo_ak_45      = GbRifleAmmo:AddToggle({ Index="ammo_ak_45",      Default=false, Text="AK Ammo 45" })
+    T.ammo_ak_75      = GbRifleAmmo:AddToggle({ Index="ammo_ak_75",      Default=false, Text="AK Ammo 75" })
+    T.ammo_stanag_50  = GbRifleAmmo:AddToggle({ Index="ammo_stanag_50",  Default=false, Text="STANAG Ammo 50" })
+    T.ammo_stanag_100 = GbRifleAmmo:AddToggle({ Index="ammo_stanag_100", Default=false, Text="STANAG Ammo 100" })
+    T.ammo_m14_50     = GbRifleAmmo:AddToggle({ Index="ammo_m14_50",     Default=false, Text="M14 Ammo 50" })
+    T.ammo_m14_30     = GbRifleAmmo:AddToggle({ Index="ammo_m14_30",     Default=false, Text="M14 Ammo 30" })
+    T.ammo_m14_20     = GbRifleAmmo:AddToggle({ Index="ammo_m14_20",     Default=false, Text="M14 Ammo 20" })
+
+    T.ammo_mk48_100 = GbLMGAmmo:AddToggle({ Index="ammo_mk48_100", Default=false, Text="MK48 Ammo 100" })
+    T.ammo_m249_100 = GbLMGAmmo:AddToggle({ Index="ammo_m249_100", Default=false, Text="M249 Ammo 100" })
+    T.ammo_pkp_200  = GbLMGAmmo:AddToggle({ Index="ammo_pkp_200",  Default=false, Text="PKP Ammo 200" })
+
+    T.ammo_tec9_32 = GbPistolAmmo:AddToggle({ Index="ammo_tec9_32", Default=false, Text="TEC9 Ammo 32" })
+    T.ammo_tec9_50 = GbPistolAmmo:AddToggle({ Index="ammo_tec9_50", Default=false, Text="TEC9 Ammo 50" })
+    T.ammo_m9_50   = GbPistolAmmo:AddToggle({ Index="ammo_m9_50",   Default=false, Text="M9 Ammo 50" })
+    T.ammo_m9_32   = GbPistolAmmo:AddToggle({ Index="ammo_m9_32",   Default=false, Text="M9 Ammo 32" })
+    T.ammo_ppsh_75 = GbPistolAmmo:AddToggle({ Index="ammo_ppsh_75", Default=false, Text="PPSH Ammo 75" })
 end
 
 -- ============================================================
@@ -97,18 +108,18 @@ local DAYPACKS       = { ["Red Daypack"]=true,["Black Daypack"]=true,["Yellow Da
 local MILPACKS       = { ["White Military Backpack"]=true,["Brown Military Backpack"]=true,["Blue Military Backpack"]=true,["Green Military Backpack"]=true }
 
 local CAT_FLAGS = {
-    { flag="cat_ar",      items=ASSAULT_RIFLES },
-    { flag="cat_br",      items=BATTLE_RIFLES  },
-    { flag="cat_lmg",     items=LMGS           },
-    { flag="cat_smg",     items=SMGS           },
-    { flag="cat_pistol",  items=PISTOLS        },
-    { flag="cat_sniper",  items=SNIPERS        },
-    { flag="cat_shotgun", items=SHOTGUNS       },
-    { flag="cat_special", items=SPECIAL        },
-    { flag="cat_c4",      items=C4             },
-    { flag="cat_c4det",   items=C4DET          },
-    { flag="cat_daypacks",items=DAYPACKS       },
-    { flag="cat_milpacks",items=MILPACKS       },
+    { flag="cat_ar",       items=ASSAULT_RIFLES },
+    { flag="cat_br",       items=BATTLE_RIFLES  },
+    { flag="cat_lmg",      items=LMGS           },
+    { flag="cat_smg",      items=SMGS           },
+    { flag="cat_pistol",   items=PISTOLS        },
+    { flag="cat_sniper",   items=SNIPERS        },
+    { flag="cat_shotgun",  items=SHOTGUNS       },
+    { flag="cat_special",  items=SPECIAL        },
+    { flag="cat_c4",       items=C4             },
+    { flag="cat_c4det",    items=C4DET          },
+    { flag="cat_daypacks", items=DAYPACKS       },
+    { flag="cat_milpacks", items=MILPACKS       },
 }
 
 local AMMO_FLAGS = {
@@ -136,24 +147,15 @@ local HEALTH_FLAGS = {
     { flag="health_painkickers", name="Painkickers" },
 }
 
-local COLOURS = {
-    yellow={255,255,0}, red={255,0,0},
-    green={0,255,0}, white={255,255,255}, cyan={0,255,255}
-}
-
 -- ============================================================
---  PER FRAME — read flags from Lib.Options (original style)
+--  PER FRAME
 -- ============================================================
 local screenW = dx9.size().width
 local screenH = dx9.size().height
 
 dx9.DrawString({screenW-110, screenH-26}, {255,255,255}, "ping: "..dx9.GetPing().."ms")
 
--- read toggle states the same way original script did via library.flags
--- supgLib stores them in Lib.Options
-local flags = Lib.Options
-
-if not flags.esp_enabled or not flags.esp_enabled.Value then return end
+if not T.esp_enabled or not T.esp_enabled.Value then return end
 if not Chunks then return end
 
 local lp = dx9.get_localplayer()
@@ -161,25 +163,24 @@ if lp == nil then return end
 
 local ACTIVE = {}
 for _, cat in next, CAT_FLAGS do
-    if flags[cat.flag] and flags[cat.flag].Value then
+    if T[cat.flag] and T[cat.flag].Value then
         for k in next, cat.items do ACTIVE[k] = true end
     end
 end
 for _, ammo in next, AMMO_FLAGS do
-    if flags[ammo.flag] and flags[ammo.flag].Value then ACTIVE[ammo.name] = true end
+    if T[ammo.flag] and T[ammo.flag].Value then ACTIVE[ammo.name] = true end
 end
 for _, h in next, HEALTH_FLAGS do
-    if flags[h.flag] and flags[h.flag].Value then ACTIVE[h.name] = true end
+    if T[h.flag] and T[h.flag].Value then ACTIVE[h.name] = true end
 end
 
 local lpx       = lp.Position.x
 local lpy       = lp.Position.y
 local lpz       = lp.Position.z
-local maxDist   = (flags.esp_maxdist and flags.esp_maxdist.Value) or 500
+local maxDist   = (T.esp_maxdist and T.esp_maxdist.Value) or 500
 local maxDistSq = maxDist * maxDist
-local boxCol    = (flags.esp_boxcol  and flags.esp_boxcol.Value)  or {255,255,0}
-local textCol   = (flags.esp_textcol and flags.esp_textcol.Value) or {255,255,0}
-local distCol   = {255,255,255}
+local boxCol    = (T.esp_boxcol  and T.esp_boxcol.Value)  or {255,255,0}
+local textCol   = (T.esp_textcol and T.esp_textcol.Value) or {255,255,0}
 local cx        = screenW / 2
 
 for _, chunk in next, dx9.GetChildren(Chunks) do
@@ -207,10 +208,10 @@ for _, chunk in next, dx9.GetChildren(Chunks) do
                     and sp.x > 0 and sp.x < screenW
                     and sp.y > 0 and sp.y < screenH then
                         local bs = 14
-                        if flags.esp_boxes   and flags.esp_boxes.Value   then dx9.DrawBox({sp.x-bs,sp.y-bs},{sp.x+bs,sp.y+bs},boxCol) end
-                        if flags.esp_tracers and flags.esp_tracers.Value then dx9.DrawLine({cx,screenH},{sp.x,sp.y},boxCol) end
-                        if flags.esp_names   and flags.esp_names.Value   then dx9.DrawString({sp.x-10,sp.y-bs-14},textCol,name) end
-                        if flags.esp_dist    and flags.esp_dist.Value    then dx9.DrawString({sp.x-10,sp.y-bs-4},distCol,dist.."m") end
+                        if T.esp_boxes   and T.esp_boxes.Value   then dx9.DrawBox({sp.x-bs,sp.y-bs},{sp.x+bs,sp.y+bs},boxCol) end
+                        if T.esp_tracers and T.esp_tracers.Value then dx9.DrawLine({cx,screenH},{sp.x,sp.y},boxCol) end
+                        if T.esp_names   and T.esp_names.Value   then dx9.DrawString({sp.x-10,sp.y-bs-14},textCol,name) end
+                        if T.esp_dist    and T.esp_dist.Value    then dx9.DrawString({sp.x-10,sp.y-bs-4},{255,255,255},dist.."m") end
                     end
                 end
             end
